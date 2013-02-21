@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'sinatra'
+
+get '/images/' do
+end
+
+get '/:user_id/token' do
+end
+
+get '/:user_id/images/' do
+end
+
+post '/:user_id/images/' do
+end
+
+get '/:user_id/images/:image_id' do
+end
+
+delete '/:user_id/images/:image_id' do
+end
+
