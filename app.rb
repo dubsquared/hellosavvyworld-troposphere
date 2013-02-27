@@ -8,7 +8,7 @@ require 'mongoid'
 require 'cloudfiles'
 
 class HelloSavvyWorld < Sinatra::Application
-  configure :production do
+  configure :development do
     enable :logging
 
     set :clean_trace, true
