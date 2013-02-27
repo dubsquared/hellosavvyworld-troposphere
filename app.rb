@@ -13,21 +13,12 @@ class HelloSavvyWorld < Sinatra::Application
 
     set :clean_trace, true
 
-    logger = Logger.new($stdout)
-
     @cloudfiles = CloudFiles::Connection.new(
       :username => "",
       :api_key => "",
       :snet => true)
 
-    Mongoid.configure do |config|
-      name = "hellosavvyworld"
-      host = "localhost"
-
-      config.master = Mongo::Connection.new.db(name)
-      config.logger = logger
-      config.persistent_in_safe_mode = false
-    end
+    Mongoid.load!(File.expand_path(File.join("..", "config", "mongoid.yml"), File.dirname(__FILE__)))
   end
 
   configure :development do
