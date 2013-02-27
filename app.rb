@@ -15,8 +15,7 @@ class HelloSavvyWorld < Sinatra::Application
 
     @cloudfiles = CloudFiles::Connection.new(
       :username => "",
-      :api_key => "",
-      :snet => true)
+      :api_key => "")
 
     Mongoid.load!(File.join("config", "mongoid.yml"))
   end
