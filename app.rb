@@ -24,7 +24,7 @@ class HelloSavvyWorld < Sinatra::Application
       name = "hellosavvyworld"
       host = "localhost"
 
-      config.master = Mongo::Connection.new(host).db(name)
+      config.master = Mongo::Connection.new.db(name)
       config.logger = logger
       config.persistent_in_safe_mode = false
     end
