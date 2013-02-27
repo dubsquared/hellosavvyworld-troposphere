@@ -18,7 +18,7 @@ class HelloSavvyWorld < Sinatra::Application
       :api_key => "",
       :snet => true)
 
-    Mongoid.load!(File.expand_path("mongoid.yml", File.join(File.dirname(__FILE__), "config")), :production)
+    Mongoid.load!(File.join("config", "mongoid.yml"))
   end
 
   configure :development do
