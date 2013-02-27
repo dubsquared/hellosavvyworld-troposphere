@@ -19,7 +19,7 @@ class HelloSavvyWorld < Sinatra::Application
     image = Image.new(:author => params["author"], :created_at => Time.now)
 
     container = @cloudfiles.container(image.author)
-    object = container.create_object(Digest::MD5.hexdigest(params["image"][:tempfile].read)) + "-orig")
+    object = container.create_object(Digest::MD5.hexdigest(params["image"][:tempfile].read) + "-orig")
     params["image"][:tempfile].rewind
     object.write(params["image"][:tempfile].read)
 
