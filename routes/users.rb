@@ -1,20 +1,28 @@
 # encoding: utf-8
 
+require 'rubygems'
+require 'builder'
+
 class HelloSavvyWorld < Sinatra::Application
   
+  get "/:author/images/rss.xml" do
+    @images = Image.where(:author => params["author"])
+    builder :rss
+  end
+
   get "/:author/images/" do
     @images = Image.where(:author => params["author"])
     erb :images
   end
 
   post "/:author/images/" do
-    # Create new Mongo document for image
+    image = Image.new(:author => params["author"], :created_at => Time.now)
+
     # Place image in Queue
   end
   
   get "/:author/images/:image" do
     # TODO Redirect to CDN URI
-    erb :image
   end
 
   delete "/:author/images/:image" do
