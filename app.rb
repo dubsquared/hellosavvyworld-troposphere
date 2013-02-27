@@ -5,6 +5,7 @@ require 'require_relative'
 require 'sinatra'
 
 require 'mongoid'
+require 'cloudfiles'
 
 class HelloSavvyWorld < Sinatra::Application
   configure :production do
@@ -13,6 +14,11 @@ class HelloSavvyWorld < Sinatra::Application
     set :clean_trace, true
 
     logger = Logger.new($stdout)
+
+    @cloudfiles = CloudFiles::Connection.new(
+      :username => "",
+      :api_key => "",
+      :snet => true)
 
     Mongoid.configure do |config|
       name = "hellosavvyworld"
