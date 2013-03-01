@@ -32,7 +32,17 @@ class HelloSavvyWorld < Sinatra::Application
       :large_url => object.public_url.chomp("-orig") + "-large"
     )
 
-    @exchange.publish(image.md5, :routing_key => @queue.name)
+    MQ = YAML.load_file(File.join("config", "mq.yml"))["development"]
+
+    AMQP.start(MQ["uri"]) do |connection|
+      channel = AMQP::Channel.new(connection)
+      queue = channel.queue("savvy.images", :auto_delete => true)
+
+      exchange = channel.direct("")
+      exchange.publish(image.md5, :routing_key => queue.name)
+
+      connection.close { EventMachine.stop }
+    end
     
     status 303
     headers "Location" => object.public_url
