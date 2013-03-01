@@ -34,12 +34,13 @@ class HelloSavvyWorld < Sinatra::Application
 
     @exchange.publish(image.md5, :routing_key => @queue.name)
     
-    status 202
+    status 303
     headers "Location" => object.public_url
   end
   
   get "/:author/images/:image" do
-    # TODO Redirect to CDN URI
+    status 301
+    headers "Location" => Image.where(:md5 => params[:image]).orig_url
   end
 
   delete "/:author/images/:image" do
