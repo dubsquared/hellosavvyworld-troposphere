@@ -6,6 +6,7 @@ require 'sinatra'
 
 require 'mongoid'
 require 'cloudfiles'
+require 'amqp'
 
 class HelloSavvyWorld < Sinatra::Application
   configure :development do
@@ -15,6 +16,12 @@ class HelloSavvyWorld < Sinatra::Application
 
     CF = YAML.load_file(File.join("config", "cloudfiles.yml"))["development"]
     @cloudfiles = CloudFiles::Connection.new(:username => CF["username"], :api_key => CF["password"])
+
+    MQ = YAML.load_file(File.join("config", "mq.yml"))["development"]
+
+    channel = AMQP::Channel.new(AMQP.connect(:uri => MQ["uri"]))
+    @queue = channel.queue("savvy.images", :auto_delete => true)
+    @exchange = channel.direct("")
 
     Mongoid.load!(File.join("config", "mongoid.yml"))
   end

@@ -32,7 +32,10 @@ class HelloSavvyWorld < Sinatra::Application
       :large_url => object.public_url.chomp("-orig") + "-large"
     )
 
-    # Place image in Queue
+    @exchange.publish(image.md5, :routing_key => @queue.name)
+    
+    status 202
+    headers "Location" => object.public_url
   end
   
   get "/:author/images/:image" do
