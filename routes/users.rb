@@ -18,7 +18,7 @@ class HelloSavvyWorld < Sinatra::Application
   post "/:author/images/" do
     container = nil
 
-    if not @cloudfiles.include? params["author"]
+    if not @cloudfiles.containers.include? params["author"]
       container = @cloudfiles.create_container(params["author"])
       container.make_public
     else
