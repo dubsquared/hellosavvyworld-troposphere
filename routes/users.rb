@@ -59,7 +59,7 @@ class HelloSavvyWorld < Sinatra::Application
   
   get "/:author/images/:image" do
     @image = Image.where(:md5 => params["image"])
-    erb :image
+    erb :img
   end
 
   delete "/:author/images/:image" do
