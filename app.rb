@@ -14,9 +14,6 @@ class HelloSavvyWorld < Sinatra::Application
 
     set :clean_trace, true
 
-    CF = YAML.load_file(File.join("config", "cloudfiles.yml"))["development"]
-    @cloudfiles = CloudFiles::Connection.new(:username => CF["username"], :api_key => CF["password"])
-
     Mongoid.load!(File.join("config", "mongoid.yml"))
   end
 

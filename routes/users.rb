@@ -17,12 +17,15 @@ class HelloSavvyWorld < Sinatra::Application
 
   post "/:author/images/" do
     container = nil
+    
+    CF = YAML.load_file(File.join("config", "cloudfiles.yml"))["development"]
+    cloudfiles = CloudFiles::Connection.new(:username => CF["username"], :api_key => CF["password"])
 
-    if not @cloudfiles.containers.include? params["author"]
-      container = @cloudfiles.create_container(params["author"])
+    if not cloudfiles.containers.include? params["author"]
+      container = cloudfiles.create_container(params["author"])
       container.make_public
     else
-      container = @cloudfiles.container(params["author"])
+      container = cloudfiles.container(params["author"])
     end
 
     image = Image.new(
@@ -46,7 +49,7 @@ class HelloSavvyWorld < Sinatra::Application
     end
     
     status 303
-    headers "Location" => object.public_url
+    headers "Location" => "/#{params["author"]}/images/#{image.md5}" 
   end
   
   get "/:author/images/:image" do
