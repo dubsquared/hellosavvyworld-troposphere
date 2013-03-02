@@ -30,7 +30,7 @@ class HelloSavvyWorld < Sinatra::Application
 
     md5 = Digest::MD5.hexdigest(params["image"][:tempfile].read)
     
-    image = Image.find(:md5 => md5)
+    image = Image.where(:md5 => md5)
 
     if image.empty?
       image = Image.new(
