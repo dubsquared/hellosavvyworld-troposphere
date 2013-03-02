@@ -23,6 +23,7 @@ class HelloSavvyWorld < Sinatra::Application
       container.make_public
     else
       container = @cloudfiles.container(params["author"])
+    end
 
     image = Image.new(
       :author => params["author"],
