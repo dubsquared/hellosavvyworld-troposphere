@@ -28,17 +28,15 @@ class HelloSavvyWorld < Sinatra::Application
       container = cloudfiles.container(params["author"])
     end
 
-    image_content = params["image"][:tempfile].read
-
     image = Image.find_or_initialize_by(
       :author => params["author"],
-      :md5 => Digest::MD5.hexdigest(image_content)
+      :md5 => Digest::MD5.hexdigest(params["image"][:tempfile].read)
     )
 
     params["image"][:tempfile].rewind
 
     object = container.create_object(image.md5)
-    object.write(image_content, { "Content-Type" => "image/#{File.extname(params["image"][:filename])[1..-1]}" })
+    object.write(params["image"][:tempfile], { "Content-Type" => "image/#{File.extname(params["image"][:filename])[1..-1]}" })
 
     image.cdn_url = object.public_url
     image.save
