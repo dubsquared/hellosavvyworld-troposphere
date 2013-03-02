@@ -6,7 +6,6 @@ class Image
   include Mongoid::Document
 
   field :md5, :type => String
-
   index({ :md5 => 1 }, { :unique => true, :name => "md5_index" })
 
   field :author, :type => String
