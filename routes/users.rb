@@ -28,16 +28,10 @@ class HelloSavvyWorld < Sinatra::Application
       container = cloudfiles.container(params["author"])
     end
 
-    md5 = Digest::MD5.hexdigest(params["image"][:tempfile].read)
-    
-    image = Image.where(:md5 => md5)
-
-    if image.empty?
-      image = Image.new(
-        :author => params["author"],
-        :md5 => Digest::MD5.hexdigest(params["image"][:tempfile].read)
-      )
-    end
+    image = Image.find_or_initialize_by(
+      :author => params["author"],
+      :md5 => Digest::MD5.hexdigest(params["image"][:tempfile].read)
+    )
 
     object = container.create_object(image.md5)
     object.write(params["image"][:tempfile], { "Content-Type" => params["image"][:type] })
