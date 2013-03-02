@@ -28,7 +28,7 @@ class HelloSavvyWorld < Sinatra::Application
       container = cloudfiles.container(params["author"])
     end
 
-    image = Image.new(
+    image = Image.create(
       :author => params["author"],
       :md5 => Digest::MD5.hexdigest(params["image"][:tempfile].read)
     )
