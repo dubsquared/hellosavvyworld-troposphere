@@ -1,9 +1,9 @@
 <ul>
   <% @images.each do |image| %>
     <li id="<%= image.md5 %>" class="image">
-    <a href="<%= image.uris["orig"] %>">
-      <img alt="<%= image.md5 %>" src="<%= image.uris["thumb"] %>" \>
-    </a>
+      <a href="/<%= image.author %>/images/<%= image.md5 %>">
+        <img alt="<%= image.md5 %>" src="<%= image.uri(:thumb) %>" \>
+      </a>
     </li>
   <% end %>
 </ul>

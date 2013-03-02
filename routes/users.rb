@@ -16,21 +16,21 @@ class HelloSavvyWorld < Sinatra::Application
   end
 
   post "/:author/images/" do
-    image = Image.new(:author => params["author"], :created_at => Time.now)
+    container = nil
 
-    container = @cloudfiles.container(image.author)
-    object = container.create_object(Digest::MD5.hexdigest(params["image"][:tempfile].read) + "-orig")
-    params["image"][:tempfile].rewind
-    object.write(params["image"][:tempfile].read)
+    if not @cloudfiles.include? params["author"]
+      container = @cloudfiles.create_container(params["author"])
+      container.make_public
+    else
+      container = @cloudfiles.container(params["author"])
 
-    image.update_attributes(
-      :md5 => object.name.chomp("-orig"),
-      :orig_url => object.public_url,
-      :thumb_url => object.public_url.chomp("-orig") + "-thumb",
-      :small_url => object.public_url.chomp("-orig") + "-small",
-      :medium_url => object.public_url.chomp("-orig") + "-medium",
-      :large_url => object.public_url.chomp("-orig") + "-large"
+    image = Image.new(
+      :author => params["author"],
+      :md5 => Digest::MD5.hexdigest(params["image"][:tempfile].read)
     )
+
+    object = container.create_object(image.md5)
+    object.write(params["image"][:tempfile], { "Content-Type" => params["image"][:type] })
 
     MQ = YAML.load_file(File.join("config", "mq.yml"))["development"]
 
@@ -39,7 +39,7 @@ class HelloSavvyWorld < Sinatra::Application
       queue = channel.queue("savvy.images", :auto_delete => true)
 
       exchange = channel.direct("")
-      exchange.publish(image.md5, :routing_key => queue.name)
+      exchange.publish(image._id, :routing_key => queue.name)
 
       connection.close { EventMachine.stop }
     end
@@ -49,8 +49,8 @@ class HelloSavvyWorld < Sinatra::Application
   end
   
   get "/:author/images/:image" do
-    status 301
-    headers "Location" => Image.where(:md5 => params[:image]).orig_url
+    @image = Image.where(:md5 => params[:image])
+    erb :image
   end
 
   delete "/:author/images/:image" do
