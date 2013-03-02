@@ -8,12 +8,21 @@ class Image
   field :md5, :type => String
   field :author, :type => String
   
-  field :orig_url, :type => String
-  field :thumb_url, :type => String
-  field :small_url, :type => String
-  field :medium_url, :type => String
-  field :large_url, :type => String
+  field :cdn_url, :type => String
 
-  field :created_at, :type => Date
+  private :cdn_url
+
+  def url(type = "orig")
+    case type
+    when "orig"
+      cdn_url
+    when [ "thumb", "small", "medium", "large" ]
+      cdn_url + "-" + type
+    else
+      raise ArgumentError.new("Unknown URL type, #{type}")
+    end
+  end
+
+  field :created_at, :type => DateTime
 end
 
