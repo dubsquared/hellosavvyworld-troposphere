@@ -58,7 +58,7 @@ class HelloSavvyWorld < Sinatra::Application
   end
   
   get "/:author/images/:image" do
-    @image = Image.where(:md5 => params["image"])
+    @image = Image.where(:md5 => params["image"]).first
     erb :image
   end
 
