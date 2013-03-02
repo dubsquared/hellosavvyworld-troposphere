@@ -16,7 +16,7 @@ class Image
     case type
     when :orig
       cdn_url
-    when [ :thumb, :small, :medium, :large ]
+    when :thumb, :small, :medium, :large
       cdn_url + "-" + type
     else
       raise ArgumentError.new("Unknown URL type, #{type}")
