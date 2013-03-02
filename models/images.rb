@@ -17,7 +17,7 @@ class Image
     when :orig
       cdn_url
     when :thumb, :small, :medium, :large
-      cdn_url + "-" + type
+      cdn_url + "-" + type.to_s
     else
       raise ArgumentError.new("Unknown URL type, #{type}")
     end
