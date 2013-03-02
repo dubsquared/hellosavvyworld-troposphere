@@ -33,6 +33,8 @@ class HelloSavvyWorld < Sinatra::Application
       :md5 => Digest::MD5.hexdigest(params["image"][:tempfile].read)
     )
 
+    params["image"][:tempfile].rewind
+
     object = container.create_object(image.md5)
     object.write(params["image"][:tempfile], { "Content-Type" => "image/#{File.extname(params["image"][:filename])[1..-1]}" })
 
