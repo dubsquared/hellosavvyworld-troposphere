@@ -28,13 +28,16 @@ class HelloSavvyWorld < Sinatra::Application
       container = cloudfiles.container(params["author"])
     end
 
-    image = Image.create(
+    image = Image.new(
       :author => params["author"],
       :md5 => Digest::MD5.hexdigest(params["image"][:tempfile].read)
     )
 
     object = container.create_object(image.md5)
     object.write(params["image"][:tempfile], { "Content-Type" => params["image"][:type] })
+
+    image.cdn_url = object.public_url
+    image.save
 
     MQ = YAML.load_file(File.join("config", "mq.yml"))["development"]
 
