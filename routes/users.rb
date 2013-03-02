@@ -36,7 +36,7 @@ class HelloSavvyWorld < Sinatra::Application
     object = container.create_object(image.md5)
     object.write(params["image"][:tempfile], { "Content-Type" => params["image"][:type] })
 
-    p params["image"][:type]
+    p params["image"]
 
     image.cdn_url = object.public_url
     image.save
