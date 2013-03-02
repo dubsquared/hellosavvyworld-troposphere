@@ -1,0 +1,8 @@
+<img alt="<%= image.md5 %>" src="<%= image.uri(:thumb) %>" />
+<ul class="alternate_image">
+  <li><a href="<%= image.url(:orig) %>">Original</a></li>
+  <li><a href="<%= image.url(:thumb) %>">Thumbnail</a></li>
+  <li><a href="<%= image.url(:small) %>">Small (480x640)</a></li>
+  <li><a href="<%= image.url(:medium) %>">Medium (800x600)</a></li>
+  <li><a href="<%= image.url(:large) %>">Large (1024x768)</a></li>
+</ul>
