@@ -72,7 +72,7 @@ class HelloSavvyWorld < Sinatra::Application
         container.delete_object(name) if container.object_exists? name
       end
 
-      container.delete_object(params[:image]) if container.object_exists? name
+      container.delete_object(params[:image]) if container.object_exists? params[:image]
     
       cloudfiles.delete_container(params[:author]) if container.empty?
 
