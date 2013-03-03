@@ -60,21 +60,27 @@ class HelloSavvyWorld < Sinatra::Application
   end
 
   delete "/:author/images/:image" do
-    container = @cloudfiles.container(params[:author])
+    CF = YAML.load_file(File.join("config", "cloudfiles.yml"))["development"]
+    cloudfiles = CloudFiles::Connection.new(:username => CF["username"], :api_key => CF["password"])
 
-    [ "orig", "thumb", "small", "medium", "large" ].each do |key|
-      begin
-        object = container.delete_object(params[:image] + "-" + key)
-      rescue CloudFiles::Exception::NoSuchObject
-        next
+    if cloudfiles.containers.include? params["author"]
+
+      container = cloudfiles.container(params[:author])
+
+      [ "thumb", "small", "medium", "large" ].each do |key|
+        name = "#{params[:image]}-#{key}"
+        container.delete_object(name) if container.object_exists? name
       end
+
+      container.delete_object(params[:image]) if container.object_exists? name
+    
+      cloudfiles.delete_container(params[:author]) if container.empty?
+
     end
     
-    image = Image.where(:md5 => params[:image])
-    
-    redirect "/#{params["author"]}/images/" if image.delete
-    
-    halt 500, "Failed to delete image, #{:image}" # TODO Fix the error code.
+    image = Image.where(:md5 => params[:image]).first
+
+    status 204 if image.delete
   end
 
 end
