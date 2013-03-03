@@ -41,9 +41,9 @@ class HelloSavvyWorld < Sinatra::Application
     image.cdn_url = object.public_url
     image.save
 
-    URI = YAML.load_file(File.join("config", "mq.yml"))["development"]["uri"]
+    MQ_URI = YAML.load_file(File.join("config", "mq.yml"))["development"]["uri"]
 
-    AMQP.start(URI) do |connection|
+    AMQP.start(MQ_URI) do |connection|
       channel = AMQP::Channel.new(connection)
       exchange = channel.fanout("images")
       exchange.publish(image.md5)
