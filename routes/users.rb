@@ -43,14 +43,11 @@ class HelloSavvyWorld < Sinatra::Application
 
     MQ = YAML.load_file(File.join("config", "mq.yml"))["development"]
 
-    AMQP.start(MQ["uri"]) do |connection|
+    AMQP.start(:uri => MQ["uri"]) do |connection|
       channel = AMQP::Channel.new(connection)
-      queue = channel.queue("savvy.images", :auto_delete => true)
-
-      exchange = channel.direct("")
-      exchange.publish(image._id, :routing_key => queue.name)
-
-      connection.close { EventMachine.stop }
+      exchange = channel.fanout("images")
+      exchange.publish(image.md5)
+      connection.close { EventMachine.stop { exit } }
     end
     
     status 303
