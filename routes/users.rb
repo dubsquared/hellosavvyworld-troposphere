@@ -33,8 +33,6 @@ class HelloSavvyWorld < Sinatra::Application
       container = cloudfiles.container(params["author"])
     end
 
-    p params
-
     image = Image.find_or_initialize_by(
       :author => params["author"],
       :md5 => Digest::MD5.hexdigest(params["image"][:tempfile].read)
