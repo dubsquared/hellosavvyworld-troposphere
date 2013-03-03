@@ -2,7 +2,7 @@
   <% @images.each do |image| %>
     <li id="<%= image.md5 %>" class="image">
       <a href="/<%= image.author %>/images/<%= image.md5 %>">
-        <img alt="<%= image.md5 %>" src="<%= image.uri(:thumb) %>" \>
+        <img alt="<%= image.md5 %>" src="<%= image.url(:thumb) %>" \>
       </a>
     </li>
   <% end %>
