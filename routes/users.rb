@@ -47,7 +47,7 @@ class HelloSavvyWorld < Sinatra::Application
       channel = AMQP::Channel.new(connection)
       exchange = channel.fanout("images")
       exchange.publish(image.md5)
-      connection.close { EventMachine.stop { exit } }
+      EM.add_timer(0.5) { connection.close { EventMachine.stop { exit } } }
     end
     
     status 303
