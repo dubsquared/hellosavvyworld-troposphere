@@ -80,7 +80,7 @@ class HelloSavvyWorld < Sinatra::Application
     
     image = Image.where(:md5 => params[:image]).first
 
-    status 204 if image.delete
+    status 204 if not image.is_nil? and image.delete
   end
 
 end
