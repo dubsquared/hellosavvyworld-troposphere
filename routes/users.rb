@@ -15,6 +15,11 @@ class HelloSavvyWorld < Sinatra::Application
     erb :images
   end
 
+  get "/:author/upload" do
+    @author = params["author"]
+    erb :upload
+  end
+
   post "/:author/images/" do
     container = nil
     
